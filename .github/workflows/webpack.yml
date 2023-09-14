@@ -1,29 +1,31 @@
 name: react-entry-template CI
 
 on:
-  push:
+  push: # 监听push操作
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x, 18.x]
-
-    steps:
-    - name: Checkout
+  build-and-deploy: # 任务ID
+    runs-on: ubuntu-latest # 运行环境
+    
+    steps: # 步骤
+    - name: Checkout # 将代码拉取到虚拟机
       uses: actions/checkout@v3
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+    - name: Setup Node # 设置nodejs版本
+      uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: '16.x'
 
-    - name: Build
+    - name: Install and Build   # 安装依赖、打包，如果提前已打包好无需这一步
       run: |
         npm install
         npm run build:prod
+
+    - name: Deploy # 部署
+      uses: JamesIves/github-pages-deploy-action@v4.3.3
+      with:
+          branch: github-pages # 部署后提交到那个分支
+          folder: dist # 这里填打包好的目录名称
