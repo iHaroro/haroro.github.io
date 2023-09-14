@@ -5,7 +5,7 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-
+  workflow_dispatch:
 jobs:
   build-and-deploy: # 任务ID
     runs-on: ubuntu-latest # 运行环境
