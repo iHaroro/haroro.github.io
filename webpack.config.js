@@ -3,14 +3,15 @@ const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const { getPageEntry, getHtmlPluginEntry } = require('./webpack.util')
-const { IS_DEV } = require('./utils')
-const { BASE_CONFIG_ENV } = require('./config')
+const { getPageEntry, getHtmlPluginEntry } = require('./config/utils/entryUtils')
+const { IS_DEV } = require('./config/utils/constants')
+const { BASE_CONFIG_ENV } = require('./config/config');
+
 
 module.exports = {
   entry: getPageEntry,
   output: {
-    path: path.resolve(__dirname, '../dist'),
+    path: path.resolve(__dirname, './dist'),
     filename: '[name]/index.[chunkhash].js', // filename 指列在 entry 中，打包后输出的文件的名称
     chunkFilename: '[name]/[name].[chunkhash].js', // chunkFilename 指未列在 entry 中，却又需要被打包出来的文件的名称
   },
@@ -40,7 +41,7 @@ module.exports = {
             loader: 'sass-resources-loader',
             options: {
               resources: [
-                path.resolve(__dirname, '../', 'src/assets/styles/global.scss'),
+                path.resolve(__dirname, './', 'src/assets/styles/global.scss'),
               ],
             },
           },
@@ -112,8 +113,9 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
-          from: path.resolve(__dirname, '../README.md'),
-          to: path.resolve(__dirname, '../dist/README.md'),
+          // For GitHub pages
+          from: path.resolve(__dirname, './README.md'),
+          to: path.resolve(__dirname, './dist/README.md'),
           force: true,
         },
       ],
@@ -122,7 +124,16 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
     alias: {
-      '@': path.resolve(__dirname, '..', 'src'),
+      '@': path.resolve(__dirname, './', 'src/'),
+      '@api': path.resolve(__dirname, './', 'src/api/'),
+      '@assets': path.resolve(__dirname, './', 'src/assets/'),
+      '@constants': path.resolve(__dirname, './', 'src/constants/'),
+      '@components': path.resolve(__dirname, './', 'src/components/'),
+      '@store': path.resolve(__dirname, './', 'src/store/'),
+      '@utils': path.resolve(__dirname, './', 'src/utils/'),
+      '@demo': path.resolve(__dirname, './', 'src/pages/demo/'),
+      '@tiktok': path.resolve(__dirname, './', 'src/pages/tiktok/'),
+      '@wechat': path.resolve(__dirname, './', 'src/pages/wechat/'),
     },
   },
 }

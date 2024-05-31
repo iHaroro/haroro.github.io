@@ -1,11 +1,10 @@
-import React from 'react'
+import './App.scss';
+import React from 'react';
 
-function App () {
-  return (
-    <div id="page1">
-      WECHAT PROJECT PAGE, HELLO WORLD!
-    </div>
-  )
-}
+const App = () => {
+  return (<div id="page1">
+    <div className="box"></div>
+  </div>);
+};
 
-export default App
+export default App;

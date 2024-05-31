@@ -1,7 +1,7 @@
 const path = require('path')
 const glob = require('glob')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { IS_DEV, PAGES_PATH, TEMP_HTML_PATH } = require('./utils')
+const { IS_DEV, PAGES_PATH, TEMP_HTML_PATH, TEMP_FAVICON_PATH } = require('./constants')
 
 // 开发环境需要编译的模块， 空数组则全部遍历编译
 // 取值为src/pages/[name]/...路径中的name
@@ -39,16 +39,23 @@ const pathMatchEntryName = path => {
  **/
 const createHtmlPlugin = (entryName, templateFile) => {
   return new HtmlWebpackPlugin({
-    // filename: `${entryName}/index.html`, // 生成的html模板文件名
-    filename: `${entryName}.html`, // 生成的html模板文件名
+    filename: `${entryName}/index.html`, // 生成的html模板文件名
+    // filename: `${entryName}.html`, // 生成的html模板文件名
     template: templateFile || TEMP_HTML_PATH, // 模板html路径
-    publicPath: './',
+    favicon: TEMP_FAVICON_PATH,
+    publicPath: `../`, // 打包后的html文件引用资源的路径
     chunks: [
       COMMON_VENDORS_FILENAME,
       entryName,
-      '[name]/index.css',
+      `[name]/index.css`,
     ],
-    favicon: path.resolve(__dirname, '../public/favicon.ico'),
+    hash: true, // hash选项的作用是 给生成的 js 文件一个独特的 hash 值，该 hash 值是该次 webpack 编译的 hash 值。默认值为 false
+    cache: true, // 默认值是 true。表示只有在内容变化时才生成一个新的文件
+    minify: {
+      caseSensitive: false, //是否大小写敏感
+      collapseBooleanAttributes: true, //是否简写boolean格式的属性如：disabled="disabled" 简写为disabled
+      collapseWhitespace: true, //是否去除空格
+    },
   })
 }
 
